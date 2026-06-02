@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# Build pokeemerald, move to Windows Desktop, and open with VBA-M
-# Source file in WSL
-WSL_FILE="/home/wyatt/pokeemerald/pokeemerald.gba"
+# Build pokeemerald-deluxe, move to Windows Desktop, and open with VBA-M
+# Project directory (the Windows working tree, mounted in WSL — builds exactly
+# what you edit in C:\Users\Wyatt\Dev\pokeemerald-deluxe, so no clone drift).
+PROJECT_DIR="/mnt/c/Users/Wyatt/Dev/pokeemerald-deluxe"
+
+# Source ROM produced by the build (FILE_NAME = pokeemerald)
+WSL_FILE="$PROJECT_DIR/pokeemerald.gba"
 
 # Destination on Windows Desktop
 WINDOWS_DESKTOP="/mnt/c/Users/Wyatt/Desktop/pokeemerald.gba"
@@ -10,10 +14,7 @@ WINDOWS_DESKTOP="/mnt/c/Users/Wyatt/Desktop/pokeemerald.gba"
 # Windows Desktop path (converted for cmd.exe)
 WINDOWS_DESKTOP_CMD="C:\Users\Wyatt\Desktop\pokeemerald.gba"
 
-# Project directory
-PROJECT_DIR="/home/wyatt/pokeemerald"
-
-echo "Building pokeemerald..."
+echo "Building pokeemerald-deluxe..."
 
 # Change to project directory
 cd "$PROJECT_DIR" || {
@@ -41,11 +42,11 @@ if [ ! -d "/mnt/c/Users/Wyatt/Desktop" ]; then
     exit 1
 fi
 
-# Move the file
-if mv "$WSL_FILE" "$WINDOWS_DESKTOP"; then
-    echo "Success! File moved to $WINDOWS_DESKTOP"
+# Copy the file (source already lives on the C: drive, so copy rather than move)
+if cp "$WSL_FILE" "$WINDOWS_DESKTOP"; then
+    echo "Success! File copied to $WINDOWS_DESKTOP"
 else
-    echo "Error: Failed to move file"
+    echo "Error: Failed to copy file"
     exit 1
 fi
 
